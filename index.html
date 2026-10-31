@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" data-motion="on">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aeon One — A concept in titanium</title>
+<meta name="description" content="Aeon One: an interactive 3D concept smartphone landing page.">
+<meta name="theme-color" content="#000000">
+<style>
+:root{--ti:#c9ccd1;--blue:#2f7bff;--tx:#f2f4f7;--mut:#8b93a1;--k:1}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:#000;color:var(--tx);font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow-x:hidden;line-height:1.5}
+[data-motion=off] *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(0,0,0,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #ffffff14}
+.logo{font-weight:600;letter-spacing:.18em;font-size:14px}
+.links{display:flex;gap:26px;align-items:center;font-size:13px;color:var(--mut)}
+.links a:hover{color:#fff}
+.chip{border:1px solid #ffffff30;background:none;color:var(--tx);border-radius:99px;padding:7px 14px;font:inherit;font-size:12px;cursor:pointer}
+.chip:hover,.chip.on{border-color:var(--blue);color:#fff}
+#burger{display:none;background:none;border:0;width:40px;height:40px;cursor:pointer}
+#burger i{display:block;width:22px;height:2px;background:#fff;margin:5px auto;transition:.3s}
+section{padding:110px 22px;max-width:1080px;margin:auto}
+h1{font-size:clamp(40px,9vw,92px);font-weight:700;line-height:1.02;letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#8e949e);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(30px,6vw,56px);letter-spacing:-.02em;line-height:1.08;margin-bottom:14px}
+p.lead{color:var(--mut);font-size:clamp(16px,2.4vw,21px);max-width:560px}
+.btn{display:inline-block;padding:13px 26px;border-radius:99px;font-size:15px;font-weight:600;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn.p{background:var(--blue);color:#fff;box-shadow:0 0 28px #2f7bff55}
+.btn.s{border-color:#ffffff40;color:#fff;background:none}
+.btn:active{transform:scale(.97)}
+#hero{max-width:none;min-height:100svh;display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:96px;padding-bottom:40px;position:relative;overflow:hidden}
+#hero::before{content:"";position:absolute;left:50%;bottom:-10%;width:130%;height:60%;transform:translateX(-50%);background:radial-gradient(ellipse at center,#2f7bff40,transparent 65%);pointer-events:none}
+#hero .lead{margin:16px auto 22px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2}
+.stage{position:relative;width:100%;height:calc(420px*var(--k) + 40px);margin-top:20px;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.stage:active{cursor:grabbing}
+.scene{position:absolute;left:50%;top:10px;width:200px;height:420px;margin-left:-100px;perspective:1100px;transform:scale(var(--k));transform-origin:top center}
+.phone{position:relative;width:200px;height:420px;transform-style:preserve-3d;will-change:transform}
+.face{position:absolute;overflow:hidden}
+.front,.back{inset:0;border-radius:36px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.front{transform:translateZ(12px);background:#04060a;border:3px solid #b9bdc5;box-shadow:inset 0 0 0 5px #000}
+.screen{position:absolute;inset:8px;border-radius:28px;background:radial-gradient(120% 70% at 30% 0,#2f7bff 0,#10306e 38%,#050a18 75%);display:flex;flex-direction:column;align-items:center;padding-top:58px}
+.screen b{font-size:62px;font-weight:300;letter-spacing:-.04em}
+.screen small{color:#cfe0ff;font-size:12px;margin-top:-4px}
+.island{position:absolute;top:14px;left:50%;width:62px;height:18px;margin-left:-31px;border-radius:12px;background:#000}
+.bar{position:absolute;bottom:10px;left:50%;width:70px;height:4px;margin-left:-35px;border-radius:4px;background:#ffffffaa}
+.back{transform:rotateY(180deg) translateZ(12px);background:linear-gradient(135deg,#9ba1aa,#dfe2e6 42%,#868c96);border:3px solid #b9bdc5}
+.plate{position:absolute;top:16px;left:16px;width:92px;height:92px;border-radius:24px;background:linear-gradient(145deg,#2a2e35,#0a0c10);box-shadow:inset 0 0 0 2px #9ea4ad,0 3px 8px #0006}
+.lens{position:absolute;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#5b84c4 0,#10203d 30%,#000 70%);box-shadow:0 0 0 3px #7c828c,inset 0 0 6px #000}
+.lens:nth-child(1){top:7px;left:7px}.lens:nth-child(2){top:7px;left:49px}.lens:nth-child(3){top:49px;left:7px}
+.flash{position:absolute;top:56px;left:56px;width:14px;height:14px;border-radius:50%;background:#f4f1d8;box-shadow:0 0 6px #fff9}
+.mark{position:absolute;bottom:34px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.4em;color:#5d636d;font-weight:600}
+.glare{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 30%,#ffffff40 48%,transparent 62%);background-size:260% 100%;background-position:var(--gp,0) 0}
+.side{background:linear-gradient(90deg,#7b8089,#e9ebee 50%,#6b7079)}
+.sr,.sl{width:24px;height:360px;left:50%;top:30px;margin-left:-12px}
+.sr{transform:rotateY(90deg) translateZ(100px)}
+.sl{transform:rotateY(-90deg) translateZ(100px)}
+.st,.sb{width:140px;height:24px;left:50%;top:50%;margin:-12px 0 0 -70px;background:linear-gradient(180deg,#7b8089,#e9ebee 50%,#6b7079)}
+.st{transform:rotateX(90deg) translateZ(210px)}
+.sb{transform:rotateX(-90deg) translateZ(210px)}
+.shadow{position:absolute;left:50%;top:402px;width:230px;height:40px;margin-left:-115px;background:radial-gradient(ellipse,#2f7bff55,#0000 70%);transform:scale(var(--k));transform-origin:top center}
+.no3d .sr,.no3d .sl,.no3d .st,.no3d .sb,.no3d .back{display:none}
+.no3d .front{transform:none}
+.views{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
+.hint{color:var(--mut);font-size:12px;margin-top:12px}
+.rv{opacity:0;transform:translateY(34px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:none}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.card{background:linear-gradient(160deg,#12161d,#07090c);border:1px solid #ffffff14;border-radius:22px;padding:26px}
+.card h3{font-size:19px;margin-bottom:6px}
+.card p{color:var(--mut);font-size:15px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:28px 0 18px}
+.panel{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center;border:1px solid #ffffff14;border-radius:26px;padding:30px;background:radial-gradient(90% 120% at 100% 0,#2f7bff22,#0000 60%),#080a0e;min-height:230px}
+.panel .big{font-size:clamp(56px,13vw,110px);font-weight:700;letter-spacing:-.04em;background:linear-gradient(180deg,#fff,#2f7bff);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.panel h3{font-size:24px;margin-bottom:8px}
+.panel p{color:var(--mut)}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:36px 0}
+.num{text-align:center;padding:22px 8px;border-radius:20px;border:1px solid #ffffff14;background:#07090c}
+.num b{display:block;font-size:clamp(28px,6vw,46px);letter-spacing:-.03em}
+.num span{color:var(--mut);font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td{padding:15px 4px;border-bottom:1px solid #ffffff14;vertical-align:top}
+td:first-child{color:var(--mut);width:38%}
+footer{text-align:center;color:var(--mut);font-size:13px;padding:50px 22px 70px;border-top:1px solid #ffffff14}
+footer a{color:var(--blue)}
+@media(max-width:760px){
+:root{--k:.82}
+.links{position:fixed;top:63px;left:0;right:0;flex-direction:column;gap:0;background:rgba(0,0,0,.96);padding:6px 0 18px;transform:translateY(-130%);transition:transform .35s ease;border-bottom:1px solid #ffffff18}
+.links.open{transform:none}
+.links a,.links button{padding:16px 24px;width:100%;text-align:left;font-size:17px}
+.links .chip{border:0;border-radius:0}
+#burger{display:block}
+#burger.x i:nth-child(1){transform:translateY(7px) rotate(45deg)}
+#burger.x i:nth-child(2){opacity:0}
+#burger.x i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+section{padding:80px 20px}
+.grid3,.panel{grid-template-columns:1fr}
+.nums{grid-template-columns:1fr 1fr}
+}
+@media(max-width:360px){:root{--k:.7}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="#hero">AEON ONE</a>
+  <button id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+  <div class="links" id="links">
+    <a href="#story">Story</a><a href="#parts">Components</a><a href="#specs">Specs</a>
+    <button class="chip" id="mo" type="button">Motion: On</button>
+  </div>
+</nav>
+
+<header id="hero">
+  <h1>Titanium.<br>Reimagined.</h1>
+  <p class="lead">Aeon One is a concept smartphone. Drag it, spin it, explore it.</p>
+  <div class="cta"><a class="btn p" href="#story">Explore</a><a class="btn s" href="#specs">See the specs</a></div>
+  <div class="stage" id="stage" aria-label="Interactive 3D phone. Drag horizontally to rotate.">
+    <div class="shadow"></div>
+    <div class="scene"><div class="phone" id="phone">
+      <div class="face front"><div class="screen"><b>9:41</b><small>Saturday, October 31</small></div><div class="island"></div><div class="bar"></div><div class="glare"></div></div>
+      <div class="face back"><div class="plate"><div class="lens"></div><div class="lens"></div><div class="lens"></div><div class="flash"></div></div><div class="mark">AEON</div><div class="glare"></div></div>
+      <div class="face side sr"></div><div class="face side sl"></div>
+      <div class="face st"></div><div class="face sb"></div>
+    </div></div>
+  </div>
+  <div class="views">
+    <button class="chip" data-v="0" type="button">Front</button>
+    <button class="chip" data-v="90" type="button">Side</button>
+    <button class="chip" data-v="180" type="button">Back</button>
+    <button class="chip on" id="auto" type="button">Auto-rotate: On</button>
+  </div>
+  <p class="hint">Drag left or right to rotate · scroll to spin</p>
+</header>
+
+<section id="story">
+  <h2 class="rv">Designed in layers of light.</h2>
+  <p class="lead rv">A brushed titanium frame, a glass back and a display that disappears into the edges.</p>
+  <div class="grid3">
+    <div class="card rv"><h3>Titanium frame</h3><p>Aerospace-grade alloy with a satin finish. Light, rigid and cool to the touch.</p></div>
+    <div class="card rv"><h3>Edge-to-edge glass</h3><p>A bright adaptive display with thin bezels and a compact camera cutout.</p></div>
+    <div class="card rv"><h3>All-day power</h3><p>A large battery and an efficient chip keep going long after the evening.</p></div>
+  </div>
+</section>
+
+<section id="parts">
+  <h2 class="rv">Every component, considered.</h2>
+  <div class="tabs rv" role="tablist" id="tabs">
+    <button class="chip on" data-t="0" role="tab" type="button">Display</button>
+    <button class="chip" data-t="1" role="tab" type="button">Chip</button>
+    <button class="chip" data-t="2" role="tab" type="button">Camera</button>
+    <button class="chip" data-t="3" role="tab" type="button">Battery</button>
+  </div>
+  <div class="panel rv" aria-live="polite"><div class="big" id="pbig">6.7"</div><div><h3 id="pt">Adaptive OLED</h3><p id="pp">Bright, colour-accurate and smooth from 1 to 120 Hz.</p></div></div>
+</section>
+
+<section id="specs">
+  <h2 class="rv">By the numbers.</h2>
+  <p class="lead rv">Specifications of the Aeon One concept.</p>
+  <div class="nums">
+    <div class="num rv"><b data-n="6.7" data-d="1">0</b><span>inch display</span></div>
+    <div class="num rv"><b data-n="120">0</b><span>Hz refresh</span></div>
+    <div class="num rv"><b data-n="48">0</b><span>MP main camera</span></div>
+    <div class="num rv"><b data-n="5000">0</b><span>mAh battery</span></div>
+  </div>
+  <table class="rv">
+    <tr><td>Frame</td><td>Brushed titanium, glass back</td></tr>
+    <tr><td>Display</td><td>6.7" adaptive OLED, 1–120 Hz</td></tr>
+    <tr><td>Chip</td><td>3 nm, 8-core CPU, neural engine</td></tr>
+    <tr><td>Cameras</td><td>48 MP main · 12 MP ultra-wide · 12 MP 5× telephoto</td></tr>
+    <tr><td>Battery</td><td>5000 mAh, 45 W wired, 25 W wireless</td></tr>
+    <tr><td>Storage</td><td>256 GB, 512 GB, 1 TB</td></tr>
+    <tr><td>Weight</td><td>199 g</td></tr>
+  </table>
+</section>
+
+<footer>
+  <p>Aeon One is a fictional concept device made for a design demo. Not affiliated with Apple or any phone maker.</p>
+  <p style="margin-top:10px"><a href="#hero">Back to top ↑</a></p>
+</footer>
+
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)},root=document.documentElement;
+var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function setMotion(off){reduce=off;root.dataset.motion=off?"off":"on";$("#mo").textContent="Motion: "+(off?"Off":"On")}
+setMotion(reduce);
+$("#mo").onclick=function(){setMotion(!reduce)};
+try{if(!(window.CSS&&CSS.supports("transform-style","preserve-3d")))root.classList.add("no3d")}catch(e){root.classList.add("no3d")}
+
+/* menu */
+var bg=$("#burger"),lk=$("#links");
+function menu(o){lk.classList.toggle("open",o);bg.classList.toggle("x",o);bg.setAttribute("aria-expanded",o)}
+bg.onclick=function(){menu(!lk.classList.contains("open"))};
+lk.addEventListener("click",function(e){if(e.target.tagName==="A")menu(false)});
+
+/* 3D phone */
+var phone=$("#phone"),stage=$("#stage"),ry=-28,rx=8,vel=0,drag=false,lx=0,auto=true,tgt=null,vis=true,run=false,ly=scrollY;
+function render(){phone.style.transform="rotateX("+rx+"deg) rotateY("+ry+"deg)";stage.style.setProperty("--gp",(((ry%360)+360)%360)/360*260+"%")}
+function loop(){
+  run=false;if(!vis)return;
+  if(!drag){
+    if(tgt!==null){var d=tgt-ry;ry=reduce?tgt:ry+d*.12;if(Math.abs(d)<.3)ry=tgt,tgt=null}
+    else if(Math.abs(vel)>.03&&!reduce){ry+=vel;vel*=.94}
+    else if(auto&&!reduce)ry+=.3;
+    rx+=(8-rx)*.05;
+  }
+  render();run=true;requestAnimationFrame(loop);
+}
+function start(){if(!run&&vis){run=true;requestAnimationFrame(loop)}}
+stage.addEventListener("pointerdown",function(e){drag=true;tgt=null;lx=e.clientX;vel=0;try{stage.setPointerCapture(e.pointerId)}catch(_){}});
+stage.addEventListener("pointermove",function(e){if(!drag)return;var dx=e.clientX-lx;lx=e.clientX;ry+=dx*.6;vel=dx*.6;render()});
+function up(){drag=false}
+stage.addEventListener("pointerup",up);stage.addEventListener("pointercancel",up);
+addEventListener("scroll",function(){var y=scrollY;if(vis&&!reduce)vel+=(y-ly)*.02;ly=y},{passive:true});
+new IntersectionObserver(function(en){vis=en[0].isIntersecting;if(vis)start()}).observe(stage);
+document.querySelectorAll("[data-v]").forEach(function(b){b.onclick=function(){
+  ry=((ry%360)+360)%360;if(ry>180)ry-=360;tgt=+b.dataset.v;vel=0;start()}});
+$("#auto").onclick=function(){auto=!auto;this.classList.toggle("on",auto);this.textContent="Auto-rotate: "+(auto?"On":"Off")};
+render();start();
+
+/* reveal + counters */
+function count(el){
+  var n=+el.dataset.n,d=+el.dataset.d||0;
+  if(reduce){el.textContent=n.toFixed(d);return}
+  var t0=performance.now();
+  (function f(t){var p=Math.min((t-t0)/1400,1),e=1-Math.pow(1-p,3);el.textContent=(n*e).toFixed(d);if(p<1)requestAnimationFrame(f)})(t0);
+}
+var io=new IntersectionObserver(function(en){en.forEach(function(x){
+  if(x.isIntersecting){x.target.classList.add("in");var c=x.target.querySelector("[data-n]");if(c)count(c);io.unobserve(x.target)}})},{threshold:.15});
+document.querySelectorAll(".rv").forEach(function(el){io.observe(el)});
+
+/* component tabs */
+var T=[
+ ['6.7"',"Adaptive OLED","Bright, colour-accurate and smooth from 1 to 120 Hz, with a tough glass layer."],
+ ["3 nm","Neural chip","Eight cores and a dedicated neural engine for fast apps, games and on-device AI."],
+ ["48 MP","Triple camera","Main, ultra-wide and 5× telephoto lenses behind a single sapphire-style plate."],
+ ["5000","All-day battery","5000 mAh with 45 W wired and 25 W wireless charging."]];
+$("#tabs").addEventListener("click",function(e){
+  var b=e.target.closest("[data-t]");if(!b)return;
+  document.querySelectorAll("[data-t]").forEach(function(x){x.classList.toggle("on",x===b)});
+  var t=T[+b.dataset.t];$("#pbig").textContent=t[0];$("#pt").textContent=t[1];$("#pp").textContent=t[2];
+});
+})();
+</script>
+</body>
+</html>
